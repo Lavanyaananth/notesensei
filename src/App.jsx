@@ -1,34 +1,47 @@
 import Editor from "./components/Editor/Editor";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { useState } from "react";
-
+import { useNotes } from "./hooks/useNotes";
+import { useState, useEffect } from "react";
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
-  const [isSaving, setIsSaving] = useState(false);
-  // Creating note
-  const addNote = () => {
-    console.log("clicked");
-    const newNote = {
-      id: Date.now().toString(),
-      title: "",
-      content: "",
-    };
-    setNotes((prev) => [newNote, ...prev]);
-    setSelectedId(newNote.id);
-  };
-  //getting selected notes
-  const selectedNote = notes.find((note) => note.id == selectedId);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const {
+    notes,
+    addNote,
+    selectedId,
+    setSelectedId,
+    deleteNote,
+    selectedNote,
+    updateNote,
+  } = useNotes();
+  //debounce for search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
+  //search notes
+  const filteredNotes = notes.filter((note) => {
+    const query = debouncedQuery.toLowerCase();
+    return (
+      note.title.toLowerCase().includes(query) ||
+      note.content.toLowerCase().includes(query)
+    );
+  });
   return (
     <div className="flex h-screen">
       <Sidebar
-        notes={notes}
+        notes={filteredNotes}
         addNote={addNote}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
+        deleteNote={deleteNote}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       ></Sidebar>
-      <Editor selectedNote={selectedNote} setNotes={setNotes}></Editor>
+      <Editor selectedNote={selectedNote} updateNote={updateNote}></Editor>
     </div>
   );
 };
