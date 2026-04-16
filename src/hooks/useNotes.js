@@ -4,8 +4,12 @@ import { useState, useEffect } from "react";
 export function useNotes() {
   // notes state
   const [notes, setNotes] = useState(() => {
-    const storedNotes = localStorage.getItem("notes");
-    return storedNotes ? JSON.parse(storedNotes) : [];
+    try {
+      const storedNotes = localStorage.getItem("notes");
+      return storedNotes ? JSON.parse(storedNotes) : [];
+    } catch {
+      return [];
+    }
   });
 
   // for showing first note by default

@@ -9,6 +9,7 @@ const Sidebar = ({
   deleteNote,
   setSelectedId,
 }) => {
+  console.log("Sidebar notes:", notes);
   return (
     <aside className="w-72 bg-[#f7f6f3] border-r border-[#e9e9e7] p-4 flex flex-col">
       <h1 className="text-xl font-semibold mb-4">NoteSensei</h1>
