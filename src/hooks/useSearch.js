@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 export function useSearch(notes = []) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
-  console.log("debouncedQuery:", debouncedQuery);
+
   //debounce for search
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -12,7 +12,7 @@ export function useSearch(notes = []) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
   //search notes
-  const filteredNotes = useMemo(() => {
+  const searchedNotes = useMemo(() => {
     const query = debouncedQuery.toLowerCase();
     return (notes || []).filter((note) => {
       const title = note.title?.toLowerCase() || "";
@@ -21,7 +21,7 @@ export function useSearch(notes = []) {
     });
   }, [notes, debouncedQuery]);
   return {
-    filteredNotes,
+    searchedNotes,
     searchQuery,
     setSearchQuery,
   };

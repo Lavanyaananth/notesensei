@@ -18,6 +18,8 @@ export function useNotes() {
     const parsed = stored ? JSON.parse(stored) : [];
     return parsed.length > 0 ? parsed[0].id : null;
   });
+  //tags state
+  const [selectedTag, setSelectedTag] = useState("all");
 
   // for storing notes to localstorage
   useEffect(() => {
@@ -31,6 +33,7 @@ export function useNotes() {
       id: Date.now().toString(),
       title: "",
       content: "",
+      tags: [],
       isNew: true,
     };
     setNotes((prev) => [newNote, ...prev]);
@@ -58,6 +61,8 @@ export function useNotes() {
       prev.map((note) => (note.id === id ? { ...note, ...updates } : note)),
     );
   };
+  //filter by tags
+
   return {
     notes,
     selectedId,
@@ -66,5 +71,7 @@ export function useNotes() {
     addNote,
     deleteNote,
     updateNote, // keep for editor updates
+    selectedTag,
+    setSelectedTag,
   };
 }
