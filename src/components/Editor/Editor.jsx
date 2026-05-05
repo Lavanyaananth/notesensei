@@ -1,9 +1,14 @@
 import { useState, useRef, useEffect } from "react";
+import { useAI } from "../../hooks/useAI";
+import AIPanel from "../AIPanel/AIPanel";
+import { normalizeToArray } from "../../../helper/normalizeToArray";
 const Editor = ({ selectedNote, updateNote }) => {
+  const [summary, setSummary] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const timeoutRef = useRef(null);
-
+  const { summarize } = useAI();
   //cleanup
   useEffect(() => {
     return () => {
@@ -69,18 +74,48 @@ const Editor = ({ selectedNote, updateNote }) => {
       setInput("");
     }
   };
+  // handle summary AI assistant
+  const handleSummarize = async () => {
+    if (!selectedNote?.content) return;
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/summarize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: selectedNote.content }),
+      });
+      const data = await res.json();
+      const parsed = data.summary;
+
+      updateNote(selectedNote.id, {
+        summary: parsed,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // handle bullets  AI assistant
+
   return (
-    <main className="flex-1 flex justify-center overflow-y-auto bg-white">
+    <main className="flex-1 flex justify-center items-center overflow-y-auto bg-white pt-16">
       <div className="w-full max-w-3xl p-8">
         {/* Title */}
-        <div className="mb-6">
+        <div className="mb-6 flex items-start justify-between gap-4">
           <input
             name="title"
             value={selectedNote?.title || ""}
             placeholder="Untitled Note"
             onChange={handleTitleChange}
-            className="w-full text-3xl outline-none capitalize"
+            className="w-full text-4xl font-semibold flex-1 outline-none capitalize"
           />
+          {/* Saving status  */}
+          <div className="ml-4 text-sm   text-gray-500 whitespace-nowrap">
+            {isSaving ? "Saving..." : "Saved ✓"}
+          </div>
         </div>
         {/* Tags */}
         <div className="mb-6 pb-6 border-b border-gray-300">
@@ -119,10 +154,6 @@ const Editor = ({ selectedNote, updateNote }) => {
             )}
           </div>
         </div>
-        {/* Saving status  */}
-        <div className="ml-4 text-sm text-gray-500 whitespace-nowrap">
-          {isSaving ? "Saving..." : "Saved ✓"}
-        </div>
 
         <textarea
           name="content"
@@ -132,6 +163,12 @@ const Editor = ({ selectedNote, updateNote }) => {
           className="w-full capitalize h-96 resize-none outline-none text-gray-700"
         />
       </div>
+      {/* right panel  */}
+      <AIPanel
+        summary={selectedNote?.summary}
+        isLoading={isLoading}
+        handleSummarize={handleSummarize}
+      ></AIPanel>
     </main>
   );
 };

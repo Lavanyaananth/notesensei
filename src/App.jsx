@@ -16,7 +16,7 @@ const App = () => {
   } = useNotes();
 
   const { searchedNotes, searchQuery, setSearchQuery } = useSearch(notes);
-  console.log(notes);
+
   const { filteredNotes, uniqueTags } = useTagFilter(
     searchedNotes,
     selectedTag,
