@@ -25,37 +25,47 @@ export function useAI() {
   };
   // 🧠 AI actions
   const summarize = (text) =>
-    callAI(`Convert the following text into EXACTLY 5 concise bullet points.
+    callAI(`You are a note summarization engine.
 
-Rules:
-- Each bullet max 12 words
-- No headings
-- No paragraphs
-- No markdown (*, **, #, etc.)
-- No explanations
-- Return ONLY a valid JSON array of 5 strings
-- If rules are not followed, return []
+TASK:
+Summarize the note.
 
-Example:
-["Point one", "Point two", "Point three", "Point four", "Point five"]
-
+RULES:
+- Return ONLY the summary.
+- Do NOT address the reader.
+- Do NOT give advice.
+- Do NOT encourage or motivate.
+- Do NOT add opinions.
+- Do NOT use phrases like:
+  "Sounds like..."
+  "Great job..."
+  "You should..."
+  "Here's a summary..."
+- Write in third person.
+- Maximum 100 words.
+- Use 1-2 short paragraphs.
 Text:
 ${text}`);
 
   const bullets = (text) =>
-    callAI(`Return ONLY a valid JSON array of strings.
+    callAI(`Convert the note into EXACTLY 5 bullet points.
 
 Rules:
-- Do NOT include any text before or after JSON
-- Do NOT include explanations
-- Do NOT include markdown
-- Each item must be a clear bullet point
-- Keep sentences slightly more detailed than summary (max 18 words)
+- Return ONLY a valid JSON array
+- Exactly 5 items
+- Each item maximum 15 words
+- Focus on key actions, decisions, issues, and plans
+- No markdown
+- No explanations
 
 Example:
-["First bullet point", "Second bullet point"]
-
-Convert the following note into bullet points:
+[
+  "Completed initial notes app UI work",
+  "Found bug affecting note summaries",
+  "Considering modal-based summary interface",
+  "Need to order groceries",
+  "Plan to fix bug tomorrow"
+]
 
 ${text}`);
   return { summarize, bullets };

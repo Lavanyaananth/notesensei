@@ -23,7 +23,7 @@ const AIPanel = ({
 
       {/* PANEL */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-80 bg-white border shadow-xl rounded-xl flex flex-col">
+        <div className="fixed bottom-6 right-6 w-[450px] bg-white border shadow-xl rounded-xl flex flex-col">
           {/* HEADER */}
           <div className="flex justify-between items-center p-3 border-b">
             <h2 className="text-sm font-semibold text-gray-600">
@@ -69,7 +69,7 @@ const AIPanel = ({
                     ))}
                   </ol>
                 ) : (
-                  <p>{summary}</p> // ✅ handles paragraph
+                  <p className="leading-7 whitespace-pre-wrap">{summary}</p> // ✅ handles paragraph
                 )}
               </div>
             )}
