@@ -7,9 +7,11 @@ export function useAI() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("http://localhost:5000/summarize", {
+      const res = await fetch("/api/summarize", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ prompt }),
       });
       const data = await res.json();
