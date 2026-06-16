@@ -3,12 +3,13 @@ import { useAI } from "../../hooks/useAI";
 import AIPanel from "../AIPanel/AIPanel";
 import { normalizeToArray } from "../../../helper/normalizeToArray";
 const Editor = ({ selectedNote, updateNote }) => {
+  const [activeOutput, setActiveOutput] = useState(null);
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const timeoutRef = useRef(null);
-  const { summarize } = useAI();
+  const { summarize, bullets } = useAI();
   //cleanup
   useEffect(() => {
     return () => {
@@ -76,21 +77,17 @@ const Editor = ({ selectedNote, updateNote }) => {
   };
   // handle summary AI assistant
   const handleSummarize = async () => {
+    setActiveOutput("summary");
+
     if (!selectedNote?.content) return;
+
     setIsLoading(true);
+
     try {
-      const res = await fetch("/api/summarize", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt: selectedNote.content }),
-      });
-      const data = await res.json();
-      const parsed = data.summary;
+      const result = await summarize(selectedNote.content);
 
       updateNote(selectedNote.id, {
-        summary: parsed,
+        summary: result,
       });
     } catch (err) {
       console.error(err);
@@ -99,6 +96,33 @@ const Editor = ({ selectedNote, updateNote }) => {
     }
   };
   // handle bullets  AI assistant
+  const handleBullets = async () => {
+    setActiveOutput("bullets");
+
+    if (!selectedNote?.content) return;
+
+    setIsLoading(true);
+
+    try {
+      const result = await bullets(selectedNote.content);
+
+      let parsedBullets = [];
+
+      try {
+        parsedBullets = JSON.parse(result);
+      } catch {
+        parsedBullets = [];
+      }
+
+      updateNote(selectedNote.id, {
+        bullets: parsedBullets,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="flex-1 flex justify-center items-center overflow-y-auto bg-white pt-16">
@@ -166,8 +190,11 @@ const Editor = ({ selectedNote, updateNote }) => {
       {/* right panel  */}
       <AIPanel
         summary={selectedNote?.summary}
+        bullets={selectedNote?.bullets}
         isLoading={isLoading}
         handleSummarize={handleSummarize}
+        handleBullets={handleBullets}
+        activeOutput={activeOutput}
       ></AIPanel>
     </main>
   );

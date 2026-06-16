@@ -6,9 +6,10 @@ const AIPanel = ({
   isLoading,
   handleSummarize,
   handleBullets,
+  activeOutput,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(summary);
+
   return (
     <>
       {/* FLOATING BUTTON */}
@@ -58,7 +59,7 @@ const AIPanel = ({
           <div className="p-3 max-h-60 overflow-y-auto text-sm text-gray-700">
             {isLoading && <p>Generating...</p>}
 
-            {!isLoading && summary && (
+            {!isLoading && activeOutput === "summary" && (
               <div className="p-3 w-full bg-white border rounded-lg text-sm text-gray-700">
                 {Array.isArray(summary) ? (
                   <ol className="w-full list-decimal pl-4 space-y-2">
@@ -74,13 +75,15 @@ const AIPanel = ({
               </div>
             )}
 
-            {!isLoading && bullets && (
-              <ul className="list-disc pl-4">
-                {bullets.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            )}
+            {!isLoading &&
+              activeOutput === "bullets" &&
+              bullets?.length > 0 && (
+                <ul className="list-disc pl-4">
+                  {bullets.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              )}
 
             {!isLoading && !summary && !bullets && (
               <>

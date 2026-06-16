@@ -7,7 +7,7 @@ export function useAI() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("/api/summarize", {
+      const res = await fetch("/api/ai", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
