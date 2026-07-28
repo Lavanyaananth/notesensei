@@ -1,4 +1,6 @@
-# React + Vite
+# Notesensei
+
+> **Note-taking app built with React, Vite, and Tailwind CSS, featuring note management, smart AI assistance, and a clean, distraction-free writing experience.**
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
