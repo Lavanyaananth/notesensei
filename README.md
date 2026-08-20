@@ -6,12 +6,12 @@ A clean, distraction-free note-taking app with AI-powered assistance — built w
 
 ## Features
 
-- 📝 Create, edit, and delete notes with a minimal, focused editor
-- 🔍 Full-text search across all notes
-- 🏷️ Tag-based filtering to organize and find notes quickly
-- 🤖 AI assistance powered by Google Gemini — summarize notes and generate bullet points on demand
-- 💾 Local-first storage — notes persist in the browser, no account needed
-- ⚡ Debounced updates and memoized filtering for a smooth editing experience
+- Create, edit, and delete notes with a minimal, focused editor
+- Full-text search across all notes
+- Tag-based filtering to organize and find notes quickly
+- AI assistance powered by Google Gemini — summarize notes and generate bullet points on demand
+- Local-first storage — notes persist in the browser, no account needed
+- Debounced updates and memoized filtering for a smooth editing experience
 
 ## Tech Stack
 
